@@ -25,7 +25,7 @@ class TestRegistroalsistema():
     self.driver.get("https://tucan.toolsincloud.net/index.php")
             # 2 | setWindowSize | 1361x684 | 
     self.driver.set_window_size(1361, 684)
-    with open('registros_cp02_1.csv', newline='') as csvfile:
+    with open('Archivos csv/registros_cp02_1.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for fila in reader:
             name = fila['name']

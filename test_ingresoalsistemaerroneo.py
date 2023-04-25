@@ -26,7 +26,7 @@ class TestIngresoalsistemaerroneo():
     # 2 | setWindowSize | 1361x684 | 
     self.driver.set_window_size(1361, 684)
     # 3 | read credentials from csv file
-    with open('registros_cp01_2.csv', newline='') as csvfile:
+    with open('Archivos csv/registros_cp01_2.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             email = row['Email']

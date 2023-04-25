@@ -24,7 +24,7 @@ class TestRegistroalsistemaerroneo():
     # 1 | open | https://tucan.toolsincloud.net/index.php | 
     self.driver.get("https://tucan.toolsincloud.net/index.php")
     self.driver.set_window_size(1361, 684)
-    with open('registros_cp02_2.csv', newline='',encoding="utf8") as csvfile:
+    with open('Archivos csv/registros_cp02_2.csv', newline='',encoding="utf8") as csvfile:
         reader = csv.DictReader(csvfile)
         for fila in reader:
             name = fila['name']
