@@ -16,7 +16,7 @@ class TestIngresoalsistema():
   
   def teardown_method(self):
     self.driver.quit()
-  
+    
   def test_ingresoalsistema(self):
     # Test name: Ingreso al sistema
     # Step # | name | target | value
@@ -46,3 +46,4 @@ class TestIngresoalsistema():
 test = TestIngresoalsistema()
 test.setup_method()
 test.test_ingresoalsistema()
+test.teardown_method()
