@@ -43,6 +43,7 @@ class TestIngresoalsistema():
             # 9 | assertText | css=.grid-user .username | @pruebasoftware3
             # 10 | go back to login page
             self.driver.find_element(By.CSS_SELECTOR, ".grid-sidebar:nth-child(11) strong").click()
+
 test = TestIngresoalsistema()
 test.setup_method()
 test.test_ingresoalsistema()
