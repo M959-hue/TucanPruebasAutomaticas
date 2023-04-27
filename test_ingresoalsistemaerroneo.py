@@ -11,11 +11,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class TestIngresoalsistemaerroneo():
-  def setup_method(self, method):
+  def setup_method(self):
     self.driver = webdriver.Chrome()
     self.vars = {}
   
-  def teardown_method(self, method):
+  def teardown_method(self):
     self.driver.quit()
   
   def test_ingresoalsistemaerroneo(self):
@@ -46,4 +46,8 @@ class TestIngresoalsistemaerroneo():
             # 10 | go refresh to login page
             self.driver.refresh()
 
+test = TestIngresoalsistemaerroneo()
+test.setup_method()
+test.test_ingresoalsistemaerroneo()
+test.teardown_method()
   

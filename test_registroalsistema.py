@@ -1,7 +1,5 @@
 import csv
 import pytest
-import time
-import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -11,11 +9,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class TestRegistroalsistema():
-  def setup_method(self, method):
+  def setup_method(self):
     self.driver = webdriver.Chrome()
     self.vars = {}
   
-  def teardown_method(self, method):
+  def teardown_method(self):
     self.driver.quit()
   
   def test_registroalsistema(self):
@@ -62,3 +60,7 @@ class TestRegistroalsistema():
             self.driver.refresh()
             self.driver.find_element(By.CSS_SELECTOR, ".grid-sidebar:nth-child(11) strong").click()
 
+test = TestRegistroalsistema()
+test.setup_method()
+test.test_registroalsistema()
+test.teardown_method()

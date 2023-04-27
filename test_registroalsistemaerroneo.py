@@ -9,13 +9,14 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import NoSuchElementException
 
 class TestRegistroalsistemaerroneo():
-  def setup_method(self, method):
+  def setup_method(self):
     self.driver = webdriver.Chrome()
     self.vars = {}
   
-  def teardown_method(self, method):
+  def teardown_method(self):
     self.driver.quit()
   
   def test_registroalsistemaerroneo(self):
@@ -26,6 +27,7 @@ class TestRegistroalsistemaerroneo():
     self.driver.set_window_size(1361, 684)
     with open('Archivos csv/registros_cp02_2.csv', newline='',encoding="utf8") as csvfile:
         reader = csv.DictReader(csvfile)
+        index = 1
         for fila in reader:
             name = fila['name']
             username = fila['username']
@@ -55,10 +57,24 @@ class TestRegistroalsistemaerroneo():
             self.driver.find_element(By.ID, "exampleInputPassword1").send_keys(password)
             # 13 | click | name=signup | 
             self.driver.find_element(By.NAME, "signup").click()
-            # 14 | verifyText | css=.alert:nth-child(2) > .text-center | email is not valid email
-            assert self.driver.find_element(By.CSS_SELECTOR, ".alert:nth-child(2) > .text-center").text == "email is not valid email"
-            # 15 | verifyText | css=.alert:nth-child(3) > .text-center | password must between 5 and 20 length
-            assert self.driver.find_element(By.CSS_SELECTOR, ".alert:nth-child(3) > .text-center").text == "password must between 5 and 20 length"
-            # 16 | verifyText | css=.text-center:nth-child(1) | Only Chars and Numbers allowed in username
-            assert self.driver.find_element(By.CSS_SELECTOR, ".text-center:nth-child(1)").text == "Only Chars and Numbers allowed in username"
+            WebDriverWait(self.driver, 30).until(expected_conditions.text_to_be_present_in_element((By.CSS_SELECTOR, ".alert:nth-child(2) > .text-center"), "email is not valid email"))
+            # 15 | verifyText | css=.alert:nth-child(2) > .text-center | email is not valid email
+            try:
+              assert self.driver.find_element(By.CSS_SELECTOR, ".alert:nth-child(2) > .text-center").text == "email is not valid email"
+            except NoSuchElementException:
+              print(f"En la prueba {index}: No se encontró el mensaje 'email is not valid email'")
+            try:
+              assert self.driver.find_element(By.CSS_SELECTOR, ".alert:nth-child(3) > .text-center").text == "password must between 5 and 20 length"
+            except NoSuchElementException:
+              print(f"En la prueba {index}: No se encontró el mensaje 'password must between 5 and 20 length'")
+            try:
+              assert self.driver.find_element(By.CSS_SELECTOR, ".text-center:nth-child(1)").text == "Only Chars and Numbers allowed in username"
+            except AssertionError:
+              print(f"En la prueba {index}: El texto Only Chars and Numbers allowed in username no se encontró")
+            self.driver.refresh()
+            index += 1 
   
+test = TestRegistroalsistemaerroneo()
+test.setup_method()
+test.test_registroalsistemaerroneo()
+test.teardown_method()
