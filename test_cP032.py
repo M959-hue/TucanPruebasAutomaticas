@@ -27,7 +27,7 @@ class TestCP032buscar():
         # 2 | setWindowSize | 1382x744 |
         self.driver.set_window_size(1382, 744)
         # 3 | click | name=email |
-        data = pd.read_csv("cp03-2.csv")
+        data = pd.read_csv("Archivos csv/cp03-2.csv")
         for name in data['Name']:
             self.driver.find_element(By.NAME, "email").click()
             # 4 | type | name=email | predeterminado.username@gmail.com

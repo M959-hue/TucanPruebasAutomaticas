@@ -20,7 +20,7 @@ class TestCP042():
     self.driver.quit()
   
   def test_cP042(self):
-    with open('CP04-2.csv', 'r') as file:
+    with open('Archivos csv/CP04-2.csv', 'r') as file:
       csv_reader = csv.reader(file)
       next(csv_reader) #skip header
       for row in csv_reader:
