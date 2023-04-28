@@ -24,9 +24,12 @@ class TestCP041():
       csv_reader = csv.reader(file)
       next(csv_reader) #skip header
       for row in csv_reader:
+        message = row['message']
+        image_path = row['image_path']
         # Test name: CP04-1
         # Step # | name | target | value
         # 1 | open | /home.php | 
+        
         self.driver.get("https://tucan.toolsincloud.net/home.php")
         # 2 | setWindowSize | 1382x744 | 
         self.driver.set_window_size(1382, 744)
@@ -44,12 +47,10 @@ class TestCP041():
         # 4 | runScript | window.scrollTo(0,0) | 
         self.driver.execute_script("window.scrollTo(0,0)")
         # 5 | type | name=status | Hola TuCan, esto es una prueba1 desde mi cuenta.
-        message = row[0]
         self.driver.find_element(By.NAME, "status").send_keys(message)
         # 6 | click | css=.fa-image | 
         self.driver.find_element(By.CSS_SELECTOR, ".fa-image").click()
         # 7 | type | id=tweet_img | C:\fakepath\prueba1.jpg
-        image_path = row[1]
         self.driver.find_element(By.ID, "tweet_img").send_keys(image_path)
         # 8 | click | id=tweet-input | 
         self.driver.find_element(By.ID, "tweet-input").click()
