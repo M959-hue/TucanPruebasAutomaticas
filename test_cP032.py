@@ -2,6 +2,7 @@
 import pytest
 import time
 import json
+import csv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -9,9 +10,11 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 
-class TestCP032buscar():
+class TestBuscar():
     def setup_method(self):
         self.driver = webdriver.Chrome()
         self.vars = {}
@@ -19,46 +22,50 @@ class TestCP032buscar():
     def teardown_method(self):
         self.driver.quit()
 
-    def test_cP032buscar(self):
-        # Test name: CP03-2 buscar
+    def test_buscar(self):
+        # Test name: buscar
         # Step # | name | target | value
         # 1 | open | / |
         self.driver.get("https://tucan.toolsincloud.net/")
         # 2 | setWindowSize | 1382x744 |
         self.driver.set_window_size(1382, 744)
         # 3 | click | name=email |
-        data = pd.read_csv("Archivos csv/cp03-2.csv")
-        for name in data['Name']:
-            self.driver.find_element(By.NAME, "email").click()
-            # 4 | type | name=email | predeterminado.username@gmail.com
-            self.driver.find_element(By.NAME, "email").send_keys("predeterminado.username@gmail.com")
-            # 5 | click | name=password |
-            self.driver.find_element(By.NAME, "password").click()
-            # 6 | type | name=password | clave123
-            self.driver.find_element(By.NAME, "password").send_keys("clave123")
-            # 7 | sendKeys | name=password | ${KEY_ENTER}
-            self.driver.find_element(By.NAME, "password").send_keys(Keys.ENTER)
-       
-            # 8 | click | css=.form-control |
-            self.driver.find_element(By.CSS_SELECTOR, ".form-control").click()
-            # 9 | type | css=.form-control | Elon Musk
-            self.driver.find_element(By.CSS_SELECTOR, ".form-control").send_keys(name)
-            # 10 | sendKeys | css=.form-control | ${KEY_ENTER}
-            self.driver.find_element(By.CSS_SELECTOR, ".form-control").send_keys(Keys.ENTER)
-            # 11 | click | id=icon-search |
-            self.driver.find_element(By.ID, "icon-search").click()
-            # 12 | click | css=.grid-sidebar:nth-child(11) strong |
-            self.driver.find_element(By.CSS_SELECTOR, ".grid-sidebar:nth-child(11) strong").click()
-            time.sleep(2) # esperar a que se cargue la página
-            self.driver.back() # volver a la página de búsqueda
-            time.sleep(2) # esperar a que se cargue la página de búsqueda
+        email_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "email")))
+        email_field.click()
+        # 4 | type | name=email | predeterminado.username@gmail.com
+        email_field.send_keys("predeterminado.username@gmail.com")
+        # 5 | click | name=password |
+        password_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "password")))
+        password_field.click()
+        # 6 | type | name=password | clave123
+        password_field.send_keys("clave123")
+        # 7 | click | name=login |
+        self.driver.find_element(By.NAME, "login").click()
+        # 8 | click | css=.form-control |
+        search_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".form-control")))
+        search_field.click()
 
-        # cerrar la ventana del navegador después de procesar todos los nombres
+        # Leer archivo CSV
+        data = pd.read_csv("cp03-2.csv")
+        for name in data['Name']:
+            try:
+                # 9 | type | css=.form-control | keyword
+                search_field.send_keys(name)
+                # 10 | sendKeys | css=.form-control | ${KEY_ENTER}
+                search_field.send_keys(Keys.ENTER)
+                WebDriverWait(self.driver, 10).until(EC.title_contains(name))  # Esperar hasta que se cargue la página de resultados
+                self.driver.back()  # Volver a la página anterior para buscar de nuevo
+                WebDriverWait(self.driver, 10).until(EC.title_contains("Dashboard"))  # Esperar hasta que se cargue la página del dashboard
+            except:
+                print("Nombre de usuario no existe")
+            search_field.clear()  # Limpiar el campo de búsqueda
+
+        # 11 | close |  | 
         self.driver.close()
 
-        print("Ejecucion completa para todos los nombres")
-
-test = TestCP032buscar()
+test = TestBuscar()
 test.setup_method()
-test.test_cP032buscar()
+test.test_buscar()
+
+
   
